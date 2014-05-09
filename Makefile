@@ -6,7 +6,7 @@ DEPLOY_RUNTIME ?= /kb/runtime
 
 all: bin 
 
-bin: $(BIN_DIR)/kb-login $(BIN_DIR)/kb-logout
+bin: $(BIN_DIR)/kb-login $(BIN_DIR)/kb-logout $(BIN_DIR)/kb-validate
 
 JSON = deps/json-parser
 BSTRLIB = deps/bstrlib
@@ -31,8 +31,11 @@ $(BIN_DIR)/kb-login: src/kb-login.o $(OBJS)
 $(BIN_DIR)/kb-logout: src/kb-logout.o $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
+$(BIN_DIR)/kb-validate: src/kb-validate.o $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
 clean:
-	rm -f $(BIN_DIR)/kb-login $(BIN_DIR)/kb-logout $(OBJS) src/kb-login.o src/kb-logout.o
+	rm -f $(BIN_DIR)/kb-login $(BIN_DIR)/kb-logout $(OBJS) src/*.o
 
 deploy: 
 deploy-all: 
