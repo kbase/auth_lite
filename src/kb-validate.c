@@ -51,7 +51,8 @@ int main(int argc, char **argv)
 
     bstring token = get_token_from_config_file();
     validate_token(token);
-    
+    bdestroy(token);
+
     return 0;
 }
 

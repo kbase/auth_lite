@@ -151,7 +151,12 @@ int validate_token(bstring token)
 	    }
 	    dictionary_set(dict, bdata(x->entry[0]), bdata(x->entry[1]));
 	}
+	bstrListDestroy(x);
     }
+    bstrListDestroy(parts);
+    parts = 0;
+    bdestroy(sig);
+    
     dictionary_dump(dict, stdout);
     printf("to sign: '%s'\n", bdata(to_sign));
 
@@ -182,6 +187,8 @@ int validate_token(bstring token)
 
     unsigned char *sha = SHA1((const unsigned char *) to_sign->data, to_sign->slen, 0);
 
+    bdestroy(to_sign);
+
     bstring bsubj = bfromcstr(subj);
     bstring pubkey = get_signer_pubkey(bsubj);
 
@@ -193,6 +200,14 @@ int validate_token(bstring token)
     int rc = RSA_verify(NID_sha1, sha, SHA_DIGEST_LENGTH, binsig->data, binsig->slen, rsa);
     printf("rc=%d\n", rc);
 
+    bdestroy(bsubj);
+    bdestroy(binsig);
+    bdestroy(pubkey);
+    BIO_free(bio);
+    RSA_free(rsa);
+    dictionary_del(dict);
+    EVP_cleanup();
+    
     return rc;
 }
 
